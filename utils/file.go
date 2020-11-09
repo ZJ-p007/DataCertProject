@@ -5,9 +5,9 @@ import (
 	"os"
 )
 
-/**
- * 保存一个文件,
- */
+
+ //保存一个文件,
+
 func SaveFile(fileName string, file io.Reader) (int64, error) {
 	saveFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_RDWR, 777)
 	if err != nil {

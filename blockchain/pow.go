@@ -16,9 +16,9 @@ type ProofOfWork struct {
 	Block  Block    //要找的nonce值对应的区块
 }
 
-/**
- * 实例化一个PoW算法的实例
- */
+
+//PoW算法
+
 func NewPoW(block Block) ProofOfWork {
 	t := big.NewInt(1)
 	t = t.Lsh(t, 255-DIFFICULTY)
@@ -29,9 +29,9 @@ func NewPoW(block Block) ProofOfWork {
 	return pow
 }
 
-/**
- * run方法用于寻找合适的nonce值
- */
+
+ //run方法用于寻找合适的nonce值
+
 func (p ProofOfWork) Run() ([]byte, int64) {
 	var nonce int64
 	nonce = 0
@@ -61,16 +61,13 @@ func (p ProofOfWork) Run() ([]byte, int64) {
 		target := p.Target     //目标值
 		var hashBig *big.Int   //声明和定义
 		hashBig = new(big.Int) //分配内存空间，为变量分配地址，
-		//xx : invalid memory or nil pointer dereference 空指针错误
 		hashBig = hashBig.SetBytes(blockHash)
 		//fmt.Println("当前尝试的Nonce值:", nonce)
 		if hashBig.Cmp(target) == -1 {
-			//停止寻找
 			break
 		}
-
-		nonce++ //自增，继续寻找
+		nonce++
 	}
-	//将找到的符合规则的nonce返回
+
 	return blockHash, nonce
 }

@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"DataCertProject/utils"
 	"github.com/astaxie/beego"
 	"DataCertProject/blockchain"
 	"fmt"
 	"DataCertProject/models"
+	"strings"
 )
 
 type CertDetailController struct {
@@ -19,7 +21,6 @@ func (c *CertDetailController) Get() {
 	//2、到区块链上查询区块数据
 	block, err := blockchain.CHAIN.QueryBlockByCertId(cert_id)
 	if err != nil {
-
 		c.Ctx.WriteString("抱歉，查询链上数据遇到错误，请重试！")
 		return
 	}
@@ -31,6 +32,9 @@ func (c *CertDetailController) Get() {
 
 	//反序列化
 	certRecord, err := models.DeserializeCertRecord(block.Data)
+	certRecord.CertIdHex = strings.ToUpper(string(certRecord.CertId))
+	certRecord.CertHashHex = string(certRecord.CertHash)
+	certRecord.CertTimeFormat = utils.TimeFormat(certRecord.CertTime,utils.TIME_FORMAT_ONE)
 	//结构体
 	c.Data["CertRecord"] = certRecord
 	//跳转证书详情页面

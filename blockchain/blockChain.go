@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"DataCertProject/models"
 	"errors"
 	"github.com/bolt"
 	"math/big"
@@ -20,9 +21,7 @@ type BlockChain struct {
 	BoltDb   *bolt.DB //区块链中操作区块数据文件的数据库操作对象
 }
 
-/**
- * 创建一条区块链
- */
+//创建一条区块链
 func NewBlockChain() *BlockChain {
 	var bc *BlockChain
 	//1、先打卡文件
@@ -70,7 +69,6 @@ func NewBlockChain() *BlockChain {
  */
 func (bc BlockChain) QueryAllBlocks() ([]*Block, error) {
 	blocks := make([]*Block, 0) //blocks是一个切片容器，用于盛放查询到的区块
-
 	db := bc.BoltDb
 	var err error
 	//从chain.db文件查询所有的区块
@@ -214,6 +212,17 @@ func (bc BlockChain) QueryBlockByCertId(cert_id string) (*Block, error) {
 				block = eachBlock
 				break
 			}
+
+			record ,err := models.DeserializeCertRecord(eachBlock.Data)
+			if err != nil{
+				err = errors.New("查询链上数据失败")
+				break
+			}
+			if string(record.CertId) == cert_id{
+				block =eachBlock
+				break
+			}
+
 			eachBig.SetBytes(eachBlock.PrevHash)
 			if eachBig.Cmp(zeroBig) == 0 { //到创世区块了，停止遍历
 				break

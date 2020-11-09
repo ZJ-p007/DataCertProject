@@ -9,8 +9,7 @@ import (
 //https://github.com/ZJ-p007/ElectronicDataAuthentication.git
 func main() {
 
-	//先准备一条区块链
-	blockchain.NewBlockChain()
+    blockchain.NewBlockChain()
 
 	//连接数据库
 	db_mysql.Connect()
@@ -21,5 +20,6 @@ func main() {
 	beego.SetStaticPath("/img", "./static/img")
 
 	beego.Run() //阻塞g
-	//http.ListenAndServe(":8080")
 }
+//45.58 114 下午
+//21.24 114晚上
