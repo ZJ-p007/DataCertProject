@@ -14,7 +14,7 @@ type SendSmsControllers struct {
 
 //用于发送短信验证码
 func (s *SendSmsControllers) Post() {
-	fmt.Println("发送验证码")
+	//fmt.Println("发送验证码")
 	var smsLogin models.SmsLogin
 	err :=s.ParseForm(&smsLogin)
 	if err != nil{
@@ -26,6 +26,7 @@ func (s *SendSmsControllers) Post() {
 	result,err :=utils.SendSms(phone,code,utils.SMS_TLP_REGISTER)
     if err != nil{
     	s.Ctx.WriteString("发送验证码失败")
+		fmt.Println(err.Error())
 		return
 	}
     //判断
@@ -45,13 +46,14 @@ func (s *SendSmsControllers) Post() {
    _,err =smsRecord.SaveRecord()
    if err != nil{
    	s.Ctx.WriteString("获取验证码失败")
+   	fmt.Println(err.Error())
 	   return
    }
    //保存成功 bizId返回前端
    s.Data["phone"] = smsLogin.Phone
    s.Data["BizId"] = smsRecord.BizId
    //验证码登录
-   s.TplName = "/login_sms.html"
+   s.TplName = "login_sms_second.html"
 
 
 
